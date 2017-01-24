@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>*</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>Desk_Reservation</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>Building__c</members>
+        <members>Desk_Booking__c</members>
+        <members>Desk__c</members>
+        <members>Floor__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Building__c-Building Layout</members>
+        <members>Desk_Booking__c-Desk Booking Layout</members>
+        <members>Desk__c-Desk Layout</members>
+        <members>Floor__c-Floor Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Standard</members>
+        <name>Profile</name>
+    </types>
+    <version>36.0</version>
+</Package>
