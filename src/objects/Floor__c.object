@@ -73,6 +73,7 @@
     </fields>
     <fields>
         <fullName>Desk_per_Row__c</fullName>
+        <defaultValue>4</defaultValue>
         <description>This will hold the layout of the floor</description>
         <externalId>false</externalId>
         <label>Desk per Row</label>
