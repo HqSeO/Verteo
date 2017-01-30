@@ -32,22 +32,28 @@ public with sharing class DeskBookingController {
 
     public String deskClickedId {get; set;}
 
+    public Desk_Booking__c unselectedSeat {get; set;}
+
     public String userName {get; set;}
 
     public ApexPages.StandardController controller {get; set;}
 
+    public DeskWrapper selectedBooking {get; set;}
     //Constructor
 	public DeskBookingController(ApexPages.StandardController controller) {
 		currentRecord = (Desk_Booking__c) controller.getRecord();
 		hasError = false;
+		unselectedSeat = null;
 		this.controller = controller;
+
+		selectedBooking = new DeskWrapper();
 
 		if(currentRecord.Id != null)
 		{
 			isEdit = true;
 
 			//Refresh the record
-			currentRecord = [SELECT Desk__c,Desk__r.Name, Booking_Day__c,User__c, User__r.Name FROM Desk_Booking__c Where Id = :currentRecord.Id limit 1];
+			currentRecord = [SELECT Desk__c,Desk__r.Floor__c, Desk__r.Floor__r.Building__c,Desk__r.Name, Booking_Day__c,User__c, User__r.Name FROM Desk_Booking__c Where Id = :currentRecord.Id limit 1];
 			controlDateInput();
 		}
 		else{
@@ -62,6 +68,9 @@ public with sharing class DeskBookingController {
     	buildingsList = new List<SelectOption>();
     	floorsList = new List<SelectOption>();
     	desksUIDisplay = new List<DeskWrapperRowDisplay>();
+
+		selectedBuilding = currentRecord.Desk__r.Floor__r.Building__c;
+    	selectedFloor = currentRecord.Desk__r.Floor__c;
 
     	refreshBuildingList();
 
@@ -113,7 +122,7 @@ public with sharing class DeskBookingController {
 
     	for(Building__c building :buildings)
     	{
-    		if(selectedBuilding == null)
+    		if(selectedBuilding == null) 
     		{
     			selectedBuilding = building.Id;
     		}
@@ -130,7 +139,22 @@ public with sharing class DeskBookingController {
     		return;
 
     	if(desksUIDisplay.size() > 0)
+    	{
+    		for(DeskWrapperRowDisplay deskInWrapperUI: desksUIDisplay)
+   			{
+   				for(DeskWrapper deskInWrapper :deskInWrapperUI.wrapperToDisplayInRow)
+   				{
+   					if(deskInWrapper.deskBooking.User__c == UserInfo.getUserId() && deskInWrapper.isBooked && deskInWrapper.deskBooking.Booking_Day__c == currentRecord.Booking_Day__c && deskInWrapper.deskBooking.Id != null)
+   					{
+   						unselectedSeat = deskInWrapper.deskBooking;
+   					}
+   				}
+   			}
+
+   			if(unselectedSeat != null && unselectedSeat.Id != null)
+   				delete unselectedSeat;
     		desksUIDisplay.clear();
+    	}
 
     	List<Desk__c> desks = [SELECT Name, Id, Floor__c, Floor__r.Building__c, (SELECT Desk__c,Desk__r.Name, Booking_Day__c,User__c, User__r.Name FROM Desk_Bookings__r Where Booking_Day__c = :currentRecord.Booking_Day__c) FROM Desk__c where Floor__c = :selectedFloor And Floor__r.Building__c = :selectedBuilding ORDER BY Name ASC];
 
@@ -148,13 +172,8 @@ public with sharing class DeskBookingController {
     	{
     		if(desk.Desk_Bookings__r != null && desk.Desk_Bookings__r.size() == 1)
     		{
-    			if(isEdit && desk.Desk_Bookings__r[0].Id == currentRecord.Id)
-    			{
-    				wrappersList.add(new DeskWrapper(currentRecord));
-    			}
-    			else{
-    				wrappersList.add(new DeskWrapper(desk.Desk_Bookings__r[0]));
-    			}
+    			wrappersList.add(new DeskWrapper(desk.Desk_Bookings__r[0]));
+    			
     		}
     		else
     		{
@@ -170,6 +189,25 @@ public with sharing class DeskBookingController {
     			i++;
     		}
     	}
+    }
+
+    public PageReference save(){
+    	system.debug('TEST:' + desksUIDisplay + 'TEST2:' + selectedBooking  + 'TEST4' + unselectedSeat);
+
+    	if(unselectedSeat != null)
+    		delete unselectedSeat;
+
+    	if(unselectedSeat == null)
+    	{
+    		if(selectedBooking.isBooked)
+   			{
+   				upsert selectedBooking.deskBooking;
+   				return new PageReference('/' + selectedBooking.deskBooking.Id);
+   			}
+    	}
+
+
+    	return new PageReference('/' + Desk_Booking__c.sobjecttype.getDescribe().getKeyPrefix());
     }
 
     public PageReference controlDateInput()
@@ -216,30 +254,52 @@ public with sharing class DeskBookingController {
    	public PageReference selectDesk(){
    		if(deskClickedId != null)
    		{
+   			system.debug('CLICK' + deskClickedId);
    			for(DeskWrapperRowDisplay deskInWrapperUI: desksUIDisplay)
    			{
    				for(DeskWrapper deskInWrapper :deskInWrapperUI.wrapperToDisplayInRow)
    				{
+   					system.debug('CELL' + deskInWrapper);
+   					system.debug('Selection' + selectedBooking);
 	   				if(deskInWrapper.deskBooking.Desk__c == deskClickedId && deskInWrapper.deskBooking.User__c == UserInfo.getUserId())
 	   				{
 	   					if(deskInWrapper.isBooked)
 	   					{
 	   						deskInWrapper.isBooked = false;
+	   						if(deskInWrapper.deskBooking.Id != null)
+	   						{
+	   							unselectedSeat = deskInWrapper.deskBooking;
+	   						}
 	   					}
 	   					else{
 	   						deskInWrapper.isBooked = true;
-	   						currentRecord = (Desk_Booking__c) controller.getRecord();
-					    	currentRecord.Desk__c = deskInWrapper.deskBooking.Desk__c;
-					    	currentRecord.User__c = deskInWrapper.deskBooking.User__c;
-					    	currentRecord.Name = 'Booking ' + deskInWrapper.deskBooking.User__r.Name + ' - ' + currentRecord.Booking_Day__c + ' Desk ' + deskInWrapper.deskBooking.Desk__r.Name;
+	   						unselectedSeat = null;
+	   						selectedBooking.isBooked = true;
+	   						if(selectedBooking.deskBooking == null)
+	   							selectedBooking.deskBooking = deskInWrapper.deskBooking;
+					    	selectedBooking.deskBooking.Desk__c = deskInWrapper.deskBooking.Desk__c;
+					    	Datetime dt = datetime.newInstance(currentRecord.Booking_Day__c.year(), currentRecord.Booking_Day__c.month(),currentRecord.Booking_Day__c.day());
+					    	selectedBooking.deskBooking.Name = 'Booking ' + userName + ' - ' + dt.format('MMMM dd YYYY') + ' Desk ' + deskInWrapper.deskBooking.Desk__r.Name;
+					    	selectedBooking.deskBooking.User__c = deskInWrapper.deskBooking.User__c;
+					    	selectedBooking.deskBooking.Booking_Day__c = currentRecord.Booking_Day__c;
+					    	selectedBooking.userName = userName;
+
 	   					}
 	   				}
 
 	   				//Unselect previous desk if user click another desk
 	   				if(deskInWrapper.isBooked == true && deskInWrapper.deskBooking.User__c == UserInfo.getUserId() && deskInWrapper.deskBooking.Desk__c != deskClickedId)
 	   				{
+	   					if(deskInWrapper.deskBooking.Id != null)
+	   					{
+	   						if(selectedBooking.deskBooking == null)
+	   							selectedBooking.deskBooking = deskInWrapper.deskBooking;
+	   						selectedBooking.deskBooking.Id = deskInWrapper.deskBooking.Id;
+	   					}
 	   					deskInWrapper.isBooked = false;
 	   				}
+	   				system.debug('After' + deskInWrapper);
+   					system.debug('after' + selectedBooking);
 	   			}
    			}
    		}
@@ -250,6 +310,10 @@ public with sharing class DeskBookingController {
    		public Boolean isBooked {get; set;}
    		public Desk_Booking__c deskBooking {get; set;}
    		public String userName {get; set;}
+
+   		public DeskWrapper(){
+   			this.isBooked = false;
+   		}
 
    		public DeskWrapper(Desk_Booking__c deskBooking)
    		{

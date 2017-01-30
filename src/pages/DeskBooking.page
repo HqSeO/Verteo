@@ -21,7 +21,7 @@ Ver. Author        	   Date        Detail
 			<div align="center">
 				<apex:outputPanel >
 					<apex:pageMessages ></apex:pageMessages>
-					<apex:commandButton action="{!PreviousDay}" title="Previous Day" value="<" disabled="{!disablePreviousDay}" reRender="myPanel,myButtons"/>
+					<apex:commandButton action="{!PreviousDay}" title="Previous Day" value="<" disabled="{!disablePreviousDay}" reRender="Master"/>
 					<apex:outputLabel value="&nbsp;&nbsp;Building:&nbsp;&nbsp;" escape="false" />
 					<apex:selectList label="Building:" size="1" title="Building:" value="{!selectedBuilding}" onchange="updateChildPickList(); return false;">
 		            	<apex:selectOptions value="{!buildingsList}"/>
@@ -32,7 +32,7 @@ Ver. Author        	   Date        Detail
 		            </apex:selectList>
 		            <apex:outputLabel value="&nbsp;&nbsp;Booking Date:&nbsp;&nbsp;" escape="false" />
 		            <apex:inputField label="Booking Date" showDatePicker="true" value="{!currentRecord.Booking_Day__c}" onchange="controlDate(); return false;"/>&nbsp;&nbsp;
-		            <apex:commandButton action="{!NextDay}" title="Next Day" value=">" reRender="myPanel,myButtons"/>
+		            <apex:commandButton action="{!NextDay}" title="Next Day" value=">" reRender="Master"/>
 	            </apex:outputPanel>
 	        </div>
 	        <apex:pageBlockSection columns="1" >
@@ -58,7 +58,7 @@ Ver. Author        	   Date        Detail
 	        </apex:pageBlockSection>
 	        <div align="center">
 				<apex:outputPanel >
-					<apex:commandButton action="{!save}" value="Save" disabled="{!hasError}"/>&nbsp;&nbsp;
+					<apex:commandButton action="{!save}" value="Save" disabled="{!hasError || NOT(selectedBooking.isBooked)}"/>&nbsp;&nbsp;
 	                <apex:commandButton action="{!cancel}" value="Cancel"/>
 	            </apex:outputPanel>
 	        </div>
