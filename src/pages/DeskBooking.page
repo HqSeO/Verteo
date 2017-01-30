@@ -43,7 +43,7 @@ Ver. Author        	   Date        Detail
 		            		<apex:repeat var="desks" value="{!desksUI.wrapperToDisplayInRow}">
 		            			<apex:column onclick="updateDesk('{!desks.deskBooking.Desk__c}');return false;" style="{!IF(NOT(desks.isBooked), 'background-color:green', 'background-color:red')}">
 		            				<apex:outputText escape="false" value="Desk:{!desks.deskBooking.Desk__r.Name}<br/>" />
-		                			<apex:outputText value="{!IF((desks.isBooked), desks.userName, "Free")}" />
+		                			<apex:outputText value="{!IF((desks.isBooked), desks.userName, "Available")}" />
 		            			</apex:column>
 		        			</apex:repeat>       		
 		            	</apex:pageBlockTable>
