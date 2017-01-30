@@ -1,0 +1,28 @@
+<!--
+Name:  StatusLoadingComponent.cls
+Copyright © 2016  Sylvain Picory
+======================================================
+======================================================
+Purpose:
+
+This component will be used to show a loading circle while loading data
+
+======================================================
+======================================================
+History
+
+Ver. Author        	   Date        Detail
+1.0  Sylvain Picory    2017-10-28  Initial draft of code.
+-->
+<apex:component >
+    <apex:actionStatus id="status">
+        <apex:facet name="start">
+            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000;">
+                &nbsp;
+            </div>
+            <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 30% 50%">
+            <img src="{!$Resource.loading}" alt="GIF used to show the loading state of the page." width="25" height="25"  />
+            </div>
+        </apex:facet>
+    </apex:actionStatus>
+</apex:component>

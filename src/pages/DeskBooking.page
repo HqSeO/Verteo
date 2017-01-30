@@ -1,0 +1,67 @@
+<!--
+Name:  DeskBooking.cls
+Copyright © 2016  Sylvain Picory
+======================================================
+======================================================
+Purpose:
+
+This page will allow the user to book a new desk for a day, or edit his previous booking
+
+======================================================
+======================================================
+History
+
+Ver. Author        	   Date        Detail
+1.0  Sylvain Picory    2017-10-28  Initial draft of code.
+-->
+<apex:page standardController="Desk_Booking__c" extensions="DeskBookingController" showHeader="true">
+	<apex:form >
+		<c:StatusLoadingComponent />
+		<apex:pageBlock title="Book a Desk" id="Master">
+			<div align="center">
+				<apex:outputPanel >
+					<apex:pageMessages ></apex:pageMessages>
+					<apex:commandButton action="{!PreviousDay}" title="Previous Day" value="<" disabled="{!disablePreviousDay}" reRender="myPanel,myButtons"/>
+					<apex:outputLabel value="&nbsp;&nbsp;Building:&nbsp;&nbsp;" escape="false" />
+					<apex:selectList label="Building:" size="1" title="Building:" value="{!selectedBuilding}" onchange="updateChildPickList(); return false;">
+		            	<apex:selectOptions value="{!buildingsList}"/>
+		            </apex:selectList>
+		            <apex:outputLabel value="&nbsp;&nbsp;Floor:&nbsp;&nbsp;" escape="false" />
+		            <apex:selectList label="Floor:" onchange="updateDeskScreen(); return false;" size="1" title="Floor:" value="{!selectedFloor}">
+		            	<apex:selectOptions value="{!floorsList}"/>
+		            </apex:selectList>
+		            <apex:outputLabel value="&nbsp;&nbsp;Booking Date:&nbsp;&nbsp;" escape="false" />
+		            <apex:inputField label="Booking Date" showDatePicker="true" value="{!currentRecord.Booking_Day__c}" onchange="controlDate(); return false;"/>&nbsp;&nbsp;
+		            <apex:commandButton action="{!NextDay}" title="Next Day" value=">" reRender="myPanel,myButtons"/>
+	            </apex:outputPanel>
+	        </div>
+	        <apex:pageBlockSection columns="1" >
+	            <apex:outputPanel id="myPanel" style="overflow:auto;">
+		            	<apex:pageBlockTable style="border:0.8px solid black;" width="100%" cellspacing="100" value="{!desksUIDisplay}" var="desksUI">
+		            		<apex:repeat var="desks" value="{!desksUI.wrapperToDisplayInRow}">
+		            			<apex:column onclick="updateDesk('{!desks.deskBooking.Desk__c}');return false;" style="{!IF(NOT(desks.isBooked), 'background-color:green', 'background-color:red')}">
+		            				<apex:outputText escape="false" value="Desk:{!desks.deskBooking.Desk__r.Name}<br/>" />
+		                			<apex:outputText value="{!IF((desks.isBooked), desks.userName, "Free")}" />
+		            			</apex:column>
+		        			</apex:repeat>       		
+		            	</apex:pageBlockTable>
+	            		<apex:actionFunction status="status" action="{!selectDesk}" name="updateDesk" reRender="Master">
+	                        <apex:param name="paramDeskId" value="" id="x" assignTo="{!deskClickedId}" />
+	                    </apex:actionFunction>
+	                    <apex:actionFunction status="status" action="{!controlDateInput}" name="controlDate" reRender="Master">
+	                    </apex:actionFunction>
+	                    <apex:actionFunction status="status" action="{!refreshFloorList}" name="updateChildPickList" reRender="Master">
+	                    </apex:actionFunction>
+	                    <apex:actionFunction status="status" action="{!refreshDeskList}" name="updateDeskScreen" reRender="Master">
+	                    </apex:actionFunction>
+	            </apex:outputPanel>
+	        </apex:pageBlockSection>
+	        <div align="center">
+				<apex:outputPanel >
+					<apex:commandButton action="{!save}" value="Save" disabled="{!hasError}"/>&nbsp;&nbsp;
+	                <apex:commandButton action="{!cancel}" value="Cancel"/>
+	            </apex:outputPanel>
+	        </div>
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

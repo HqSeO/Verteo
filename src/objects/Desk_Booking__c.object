@@ -18,7 +18,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>DeskBooking</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Follow</actionName>
@@ -30,7 +32,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <type>Default</type>
+        <content>DeskBooking</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>SaveEdit</actionName>
@@ -56,11 +60,70 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Booking_Day__c</fullName>
+        <description>This represents the day of the booking</description>
+        <externalId>false</externalId>
+        <label>Booking Day</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Building_Address__c</fullName>
+        <externalId>false</externalId>
+        <formula>If(Desk__r.Floor__r.Building__r.Name != null, Desk__r.Floor__r.Building__r.Name &amp; BR(), &apos;&apos;) &amp; 
+ If(Desk__r.Floor__r.Building__r.City__c != null, Desk__r.Floor__r.Building__r.City__c &amp; BR(), &apos;&apos;) &amp;
+ If(Desk__r.Floor__r.Building__r.Country__c != null, Desk__r.Floor__r.Building__r.Country__c &amp; BR(), &apos;&apos;) &amp;
+ If(Desk__r.Floor__r.Building__r.Postal_Code__c != null, Desk__r.Floor__r.Building__r.Postal_Code__c &amp; BR(), &apos;&apos;)&amp;
+ If(Desk__r.Floor__r.Building__r.State__c != null, Desk__r.Floor__r.Building__r.State__c &amp; BR(), &apos;&apos;)&amp;
+ If(Desk__r.Floor__r.Building__r.Street__c != null, Desk__r.Floor__r.Building__r.Street__c &amp; BR(), &apos;&apos;)</formula>
+        <label>Building Address</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Desk__c</fullName>
+        <description>This represents the desk to be book by the user</description>
+        <externalId>false</externalId>
+        <label>Desk</label>
+        <referenceTo>Desk__c</referenceTo>
+        <relationshipLabel>Desk Bookings</relationshipLabel>
+        <relationshipName>Desk_Bookings</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>User__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>This represents the user which make the booking in the app</description>
+        <externalId>false</externalId>
+        <label>User</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Desk_Bookings</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
     <label>Desk Booking</label>
     <listViews>
-        <fullName>All</fullName>
+        <fullName>My_Bookings</fullName>
+        <columns>NAME</columns>
+        <columns>Desk__c</columns>
+        <columns>User__c</columns>
+        <columns>Booking_Day__c</columns>
+        <columns>Building_Address__c</columns>
         <filterScope>Everything</filterScope>
-        <label>All</label>
+        <label>My Bookings</label>
     </listViews>
     <nameField>
         <label>Desk Booking Name</label>
@@ -69,5 +132,5 @@
     </nameField>
     <pluralLabel>Desk Bookings</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

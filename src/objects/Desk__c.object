@@ -56,6 +56,21 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Floor__c</fullName>
+        <description>This represents the floor where is located the desk</description>
+        <externalId>false</externalId>
+        <label>Floor</label>
+        <referenceTo>Floor__c</referenceTo>
+        <relationshipLabel>Desks</relationshipLabel>
+        <relationshipName>Desks</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
     <label>Desk</label>
     <listViews>
         <fullName>All</fullName>
@@ -64,11 +79,11 @@
     </listViews>
     <nameField>
         <displayFormat>{000000}</displayFormat>
-        <label>Desk NUmber</label>
+        <label>Desk Number</label>
         <trackHistory>false</trackHistory>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Desks</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

@@ -6,6 +6,10 @@
     </types>
     <types>
         <members>*</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -35,8 +39,12 @@
         <name>Layout</name>
     </types>
     <types>
-        <members>Standard</members>
+        <members>Verteo Sales profile</members>
         <name>Profile</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
     </types>
     <version>36.0</version>
 </Package>

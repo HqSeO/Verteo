@@ -57,10 +57,46 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
-        <fullName>Name__c</fullName>
-        <description>This field represent the building name</description>
+        <fullName>City__c</fullName>
+        <description>This will store the city of the building</description>
         <externalId>false</externalId>
-        <label>Building Name</label>
+        <label>City</label>
+        <length>255</length>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Country__c</fullName>
+        <description>This will story the country where the building is located</description>
+        <externalId>false</externalId>
+        <label>Country</label>
+        <length>255</length>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Postal_Code__c</fullName>
+        <description>This will be used to store postal code.</description>
+        <externalId>false</externalId>
+        <label>Postal Code</label>
+        <length>255</length>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>State__c</fullName>
+        <description>This will be used to store the corresponding State of the address</description>
+        <externalId>false</externalId>
+        <label>State</label>
         <length>255</length>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -87,10 +123,9 @@
         <label>All</label>
     </listViews>
     <nameField>
-        <displayFormat>{000000}</displayFormat>
-        <label>Building Number</label>
+        <label>Building Name</label>
         <trackHistory>false</trackHistory>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Buildings</pluralLabel>
     <searchLayouts/>
