@@ -7,11 +7,11 @@
     </applicationVisibilities>
     <classAccesses>
         <apexClass>ApplicationException</apexClass>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>BookDeskTriggerHandler</apexClass>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>DeskBookingController</apexClass>

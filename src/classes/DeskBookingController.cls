@@ -63,8 +63,6 @@ public with sharing class DeskBookingController {
 
     	userName = [Select Id, Name From User Where Id = :UserInfo.getUserId() Limit 1].Name;
 
-    	rowNumber = Integer.valueOf(DeskBookingUIConfig__c.getInstance().Desk_per_Row__c);
-
     	buildingsList = new List<SelectOption>();
     	floorsList = new List<SelectOption>();
     	desksUIDisplay = new List<DeskWrapperRowDisplay>();
@@ -96,8 +94,8 @@ public with sharing class DeskBookingController {
     	{
     		selectedFloor = null;
     	}
-
-    	for(Floor__c floor :floors.values())
+    	
+       	for(Floor__c floor :floors.values())
     	{
     		if(selectedFloor == null)
     		{
@@ -156,7 +154,7 @@ public with sharing class DeskBookingController {
     		desksUIDisplay.clear();
     	}
 
-    	List<Desk__c> desks = [SELECT Name, Id, Floor__c, Floor__r.Building__c, (SELECT Desk__c,Desk__r.Name, Booking_Day__c,User__c, User__r.Name FROM Desk_Bookings__r Where Booking_Day__c = :currentRecord.Booking_Day__c) FROM Desk__c where Floor__c = :selectedFloor And Floor__r.Building__c = :selectedBuilding ORDER BY Name ASC];
+    	List<Desk__c> desks = [SELECT Name, Id, Floor__c, Floor__r.Building__c,Floor__r.Desk_per_Row__c, (SELECT Desk__c,Desk__r.Name, Booking_Day__c,User__c, User__r.Name FROM Desk_Bookings__r Where Booking_Day__c = :currentRecord.Booking_Day__c) FROM Desk__c where Floor__c = :selectedFloor And Floor__r.Building__c = :selectedBuilding ORDER BY Name ASC];
 
     	if(desks == null || desks.size() == 0)
     	{
@@ -164,6 +162,9 @@ public with sharing class DeskBookingController {
     		hasError = true;
     		return;
     	}
+
+    	//They all belong to the same floor so I can take the display from there
+    	rowNumber = Integer.valueOf(desks[0].Floor__r.Desk_per_Row__c);
 
     	Integer i = 1;
     	List<DeskWrapper> wrappersList = new List<DeskWrapper>();
