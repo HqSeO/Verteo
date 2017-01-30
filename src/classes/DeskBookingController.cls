@@ -192,7 +192,6 @@ public with sharing class DeskBookingController {
     }
 
     public PageReference save(){
-    	system.debug('TEST:' + desksUIDisplay + 'TEST2:' + selectedBooking  + 'TEST4' + unselectedSeat);
 
     	if(unselectedSeat != null)
     		delete unselectedSeat;
@@ -201,7 +200,15 @@ public with sharing class DeskBookingController {
     	{
     		if(selectedBooking.isBooked)
    			{
-   				upsert selectedBooking.deskBooking;
+   				try{
+   					upsert selectedBooking.deskBooking;
+   				}
+   				catch(DmlException e)
+   				{
+   					ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR, e.getDmlMessage(0)));
+		    		hasError = true;
+		    		return null;
+   				}
    				return new PageReference('/' + selectedBooking.deskBooking.Id);
    			}
     	}
@@ -254,13 +261,10 @@ public with sharing class DeskBookingController {
    	public PageReference selectDesk(){
    		if(deskClickedId != null)
    		{
-   			system.debug('CLICK' + deskClickedId);
    			for(DeskWrapperRowDisplay deskInWrapperUI: desksUIDisplay)
    			{
    				for(DeskWrapper deskInWrapper :deskInWrapperUI.wrapperToDisplayInRow)
    				{
-   					system.debug('CELL' + deskInWrapper);
-   					system.debug('Selection' + selectedBooking);
 	   				if(deskInWrapper.deskBooking.Desk__c == deskClickedId && deskInWrapper.deskBooking.User__c == UserInfo.getUserId())
 	   				{
 	   					if(deskInWrapper.isBooked)
@@ -298,8 +302,6 @@ public with sharing class DeskBookingController {
 	   					}
 	   					deskInWrapper.isBooked = false;
 	   				}
-	   				system.debug('After' + deskInWrapper);
-   					system.debug('after' + selectedBooking);
 	   			}
    			}
    		}

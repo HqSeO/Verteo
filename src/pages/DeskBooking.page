@@ -20,18 +20,20 @@ Ver. Author        	   Date        Detail
 		<apex:pageBlock title="Book a Desk" id="Master">
 			<div align="center">
 				<apex:outputPanel >
-					<apex:pageMessages ></apex:pageMessages>
+					<apex:outputPanel rendered="{!hasError}">
+						<apex:pageMessages ></apex:pageMessages>
+					</apex:outputPanel>
 					<apex:commandButton action="{!PreviousDay}" title="Previous Day" value="<" disabled="{!disablePreviousDay}" reRender="Master"/>
-					<apex:outputLabel value="&nbsp;&nbsp;Building:&nbsp;&nbsp;" escape="false" />
+					<apex:outputLabel value="&nbsp;Building:&nbsp;" escape="false" />
 					<apex:selectList label="Building:" size="1" title="Building:" value="{!selectedBuilding}" onchange="updateChildPickList(); return false;">
 		            	<apex:selectOptions value="{!buildingsList}"/>
 		            </apex:selectList>
-		            <apex:outputLabel value="&nbsp;&nbsp;Floor:&nbsp;&nbsp;" escape="false" />
+		            <apex:outputLabel value="&nbsp;Floor:&nbsp;" escape="false" />
 		            <apex:selectList label="Floor:" onchange="updateDeskScreen(); return false;" size="1" title="Floor:" value="{!selectedFloor}">
 		            	<apex:selectOptions value="{!floorsList}"/>
 		            </apex:selectList>
-		            <apex:outputLabel value="&nbsp;&nbsp;Booking Date:&nbsp;&nbsp;" escape="false" />
-		            <apex:inputField label="Booking Date" showDatePicker="true" value="{!currentRecord.Booking_Day__c}" onchange="controlDate(); return false;"/>&nbsp;&nbsp;
+		            <apex:outputLabel value="&nbsp;Booking Date:&nbsp;" escape="false" />
+		            <apex:inputField label="Booking Date" showDatePicker="true" value="{!currentRecord.Booking_Day__c}" onchange="controlDate(); return false;"/>&nbsp;
 		            <apex:commandButton action="{!NextDay}" title="Next Day" value=">" reRender="Master"/>
 	            </apex:outputPanel>
 	        </div>
